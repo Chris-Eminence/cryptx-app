@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/dimensions.dart';
+import 'controller/market_chart_controller/market_chart_provider.dart';
+import 'controller/market_chart_controller/marrket_chart_state.dart';
 import 'controller/more_info_provider.dart';
 import 'controller/more_info_state.dart';
 
@@ -24,12 +26,18 @@ class _MoreDetailsPageState extends ConsumerState<MoreDetailsPage> {
     super.initState();
     Future.microtask(() {
       ref.read(moreInfoNotifierProvider.notifier).getMoreInfo(widget.cryptoId);
+      // fetch chart data
+      ref
+          .read(marketChartNotifierProvider.notifier)
+          .fetchChart(widget.cryptoId, days: 7);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(moreInfoNotifierProvider);
+    final chartState = ref.watch(marketChartNotifierProvider);
+
 
     return Scaffold(
       backgroundColor: kPrimaryBlackColor,
@@ -127,10 +135,25 @@ class _MoreDetailsPageState extends ConsumerState<MoreDetailsPage> {
                       ),
                   
                       const SizedBox(height: 24),
-                  
+
                       SizedBox(
                         height: 200,
-                        child: CryptoLineChart(prices: weeklySum),
+                        child: Builder(builder: (_) {
+                          if (chartState is MarketChartLoading || chartState is MarketChartInitial) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          if (chartState is MarketChartLoaded) {
+                            final prices = chartState.chartData.prices.map((e) => e.value).toList();
+                            return CryptoLineChart(prices: prices);
+                          }
+
+                          if (chartState is MarketChartError) {
+                            return Center(child: Text(chartState.message));
+                          }
+
+                          return const SizedBox();
+                        }),
                       ),
                   
                       const SizedBox(height: 24),
@@ -140,7 +163,6 @@ class _MoreDetailsPageState extends ConsumerState<MoreDetailsPage> {
                           Center(
                             child: Image.network(
                               crypto.image.large,
-
                             ),
                           ),
 

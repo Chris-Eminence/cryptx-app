@@ -1,10 +1,9 @@
 import 'package:cryptx/features/homepage/controller/crypto_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cryptx/features/more_details_page/more_details_page.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/dimensions.dart';
+import '../widgets/crypto_list_items.dart';
 
 class Homepage extends ConsumerWidget {
   const Homepage({super.key});
@@ -95,7 +94,7 @@ class Homepage extends ConsumerWidget {
                       final crypto = state.data[index];
                       return Container(
                         margin: EdgeInsets.symmetric(vertical: 10),
-                        child: _CryptoListItem(crypto: crypto),
+                        child: CryptoListItem(crypto: crypto),
                       );
                     },
                   );
@@ -109,108 +108,4 @@ class Homepage extends ConsumerWidget {
   }
 }
 
-class _CryptoListItem extends StatelessWidget {
-  final dynamic crypto;
-  const _CryptoListItem({required this.crypto});
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => MoreDetailsPage(cryptoId: crypto.id,)),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF18171c),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            // Left section
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Image.network(
-                      crypto.image,
-                      width: 32,
-                      height: 32,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          crypto.name,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          crypto.symbol.toUpperCase(),
-                          style: GoogleFonts.aBeeZee(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Right section
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$${crypto.currentPrice.toString()}',
-                    style: GoogleFonts.aBeeZee(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${crypto.priceChangePercentage24h.toStringAsFixed(2)}%',
-                    style: GoogleFonts.aBeeZee(
-                      color: crypto.priceChangePercentage24h >= 0 ? Colors.green : Colors.red,
-                      fontSize: 10,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
