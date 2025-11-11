@@ -1,16 +1,24 @@
+import 'package:cryptx/features/homepage/repo/get_coin_data_repo.dart';
 import 'package:cryptx/features/welcome_screen/ui/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(  MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+    MyApp({super.key});
 
-  // This widget is the root of your application.
+ GetCoinDataRepo getCoinDataRepo = GetCoinDataRepo();
+
+ void fectcoin () async {
+   await getCoinDataRepo.fetchData();
+ }
+
+
   @override
   Widget build(BuildContext context) {
+    fectcoin();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
