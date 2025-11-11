@@ -12,14 +12,11 @@ class MyApp extends StatelessWidget {
 
  GetCoinDataRepo getCoinDataRepo = GetCoinDataRepo();
 
- void fectcoin () async {
-   await getCoinDataRepo.fetchData();
- }
 
 
   @override
   Widget build(BuildContext context) {
-    fectcoin();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
