@@ -13,6 +13,18 @@ class CryptoDataState {
     required this.error,
   });
 
+   CryptoDataState copyWith({
+    List<CryptoDataModel>? data,
+    bool? isLoading,
+    String? error,
+  }) {
+    return CryptoDataState(
+      data: data ?? this.data,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+
   factory CryptoDataState.loading() =>
       CryptoDataState(isLoading: true, data: [], error: null);
 

@@ -1,14 +1,18 @@
+import 'package:cryptx/constants/colors.dart';
+import 'package:cryptx/features/favourites_page/ui/favourite_page.dart';
+import 'package:cryptx/features/homepage/controller/crypto_data_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../more_details_page/more_details_page.dart';
 
-class CryptoListItem extends StatelessWidget {
+class CryptoListItem extends ConsumerWidget {
   final dynamic crypto;
   const CryptoListItem({required this.crypto});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -74,33 +78,46 @@ class CryptoListItem extends StatelessWidget {
             ),
 
             // Right section
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$${crypto.currentPrice.toString()}',
-                    style: GoogleFonts.aBeeZee(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+
+                    Text(
+                      '\$${crypto.currentPrice.toString()}',
+                      style: GoogleFonts.aBeeZee(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${crypto.priceChangePercentage24h.toStringAsFixed(2)}%',
-                    style: GoogleFonts.aBeeZee(
-                      color: crypto.priceChangePercentage24h >= 0 ? Colors.green : Colors.red,
-                      fontSize: 10,
+                    const SizedBox(height: 4),
+                    Text(
+                      '${crypto.priceChangePercentage24h.toStringAsFixed(2)}%',
+                      style: GoogleFonts.aBeeZee(
+                        color: crypto.priceChangePercentage24h >= 0 ? Colors.green : Colors.red,
+                        fontSize: 10,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(
+                    crypto.isFavourite ? Icons.favorite : Icons.favorite_border,
+                    color: crypto.isFavourite ?   Color(0xFFbd74a0) : Colors.white,
                   ),
-                ],
-              ),
+                  onPressed: () {
+                    ref.read(cryptoProvider.notifier).toggleFavourite(crypto.id);
+                    // navigate to favourite page
+
+                  },
+                ),
+              ],
             ),
           ],
         ),

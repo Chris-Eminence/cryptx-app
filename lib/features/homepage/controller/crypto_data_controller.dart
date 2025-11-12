@@ -1,3 +1,4 @@
+import 'package:cryptx/features/homepage/model/crypto_data_model.dart';
 import 'package:cryptx/features/homepage/repo/get_coin_data_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -9,6 +10,22 @@ class CryptoDataController extends StateNotifier<CryptoDataState> {
 
   CryptoDataController(this._repo) : super(CryptoDataState.loading()) {
     fetchCoins();
+  }
+
+  void toggleFavourite(String cryptoId) {
+    state = state.copyWith(
+      data: state.data.map((crypto) {
+        if (crypto.id == cryptoId) {
+          return crypto.toggleFavourite();
+        }
+        return crypto;
+      }).toList(),
+    );
+  }
+
+// Optional: Get only favourites
+  List<CryptoDataModel> get favourites {
+    return state.data.where((crypto) => crypto.isFavourite).toList();
   }
 
   Future<void> fetchCoins() async {
