@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../more_details_page/more_details_page.dart';
+import '../../more_details_page/ui/more_details_page.dart';
 
 class CryptoListItem extends ConsumerWidget {
   final dynamic crypto;

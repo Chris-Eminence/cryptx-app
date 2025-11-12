@@ -2,18 +2,20 @@
 
 import 'dart:convert';
 import 'package:cryptx/features/homepage/model/crypto_data_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class GetCoinDataRepo {
+  final String? _apiKey = dotenv.env['API_KEY'];
   Future<List<CryptoDataModel>> fetchData() async {
     const String url =
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd';
-    const String apiKey = 'CG-4Cxps3FwgXWKEA6L9CyX5pez';
+
 
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'x-cg-demo-api-key': apiKey,
+        'x-cg-demo-api-key': _apiKey!,
         'Accept': 'application/json',
       },
     );

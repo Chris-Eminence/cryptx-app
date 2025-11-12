@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/more_info_model.dart';
 
 class MoreInfoRepo {
   // You can store the API key here internally
-  final String _apiKey = 'CG-4Cxps3FwgXWKEA6L9CyX5pez';
+  final String? _apiKey = dotenv.env['API_KEY'];
 
   Future<MoreInfoModel?> getMoreInfo(String id) async {
     final url = Uri.parse('https://api.coingecko.com/api/v3/coins/$id');
@@ -13,7 +14,7 @@ class MoreInfoRepo {
     final response = await http.get(
       url,
       headers: {
-        'x-cg-demo-api-key': _apiKey,
+        'x-cg-demo-api-key': _apiKey!,
       },
     );
 

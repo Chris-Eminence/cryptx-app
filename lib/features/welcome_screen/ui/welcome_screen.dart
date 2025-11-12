@@ -2,18 +2,17 @@ import 'package:cryptx/constants/colors.dart';
 import 'package:cryptx/constants/dimensions.dart';
 import 'package:cryptx/features/homepage/ui/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class WelcomeScreen extends StatefulWidget {
+import '../../../services/internet_checker_stream_provider.dart';
+
+class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isConnected = ref.watch(internetProvider);
     return Scaffold(
       backgroundColor: kPrimaryBlackColor,
       body: SafeArea(
@@ -71,31 +70,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               SizedBox(height: 44),
 
+
               GestureDetector(
-                onTap: () {
+                onTap: isConnected.hasError ? null : () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const Homepage()),
                   );
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                child: isConnected.when(data: (connected){
+                  if(connected){
+                    return Container(
+                      padding: EdgeInsets.symmetric(vertical: 16),
 
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: kPrimaryPurpleColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Get Started",
-                      style: GoogleFonts.poppins(
-                        color: kPrimaryWhiteColor,
-                        fontSize: 16,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: kPrimaryPurpleColor,
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                    ),
-                  ),
-                ),
+                      child: Center(
+                        child: isConnected.isLoading ? CircularProgressIndicator(color: kPrimaryWhiteColor)  : Text(
+
+                          "Get Started",
+                          style: GoogleFonts.poppins(
+                            color: kPrimaryWhiteColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    );
+                  }else{
+                    return Center(
+                      child: Text("Checking for Internet Connection", style: GoogleFonts.poppins(fontSize: 16, color: kPrimaryWhiteColor),),
+                    );
+                  }
+                }, loading: () => Center(child: CircularProgressIndicator(color: kPrimaryWhiteColor,)),
+                    error: (_, __) => const Text("Error Occurred"))
+
               ),
               SizedBox(height: 16),
             ],

@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/market_chart_model.dart'; // import your model
 
 class MarketChartRepo {
-  final String _apiKey = 'CG-4Cxps3FwgXWKEA6L9CyX5pez';
+  final String? _apiKey = dotenv.env['API_KEY'];
 
   /// Fetch market chart data for a coin over a number of days
   Future<MarketChartModel?> getMarketChart(String id, {int days = 7}) async {
@@ -15,7 +16,7 @@ class MarketChartRepo {
     try {
       final response = await http.get(
         url,
-        headers: {'x-cg-demo-api-key': _apiKey},
+        headers: {'x-cg-demo-api-key': _apiKey!},
       );
 
       if (response.statusCode == 200) {
