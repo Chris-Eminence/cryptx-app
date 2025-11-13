@@ -17,14 +17,13 @@ If you're actively tracking cryptocurrencies and want a unified, beautifully-des
 ## 🚀 Getting Started
 
 ### Video Demo
-https://drive.google.com/file/d/1iNfeR9KCnddsEtFQ4CKs1Lxr5XNM8D0L/view?usp=drive_link
+https://drive.google.com/file/d/14yN-pWswV8W1bOArHyAlI4QGNzPpK8x1/view?usp=sharing
 
 ### Appetize Link
-https://appetize.io/app/b_bfapzwkgzxersw2l3ujjvhxrva
+https://appetize.io/app/b_thfpodbjst6ubn6wdlg73jyewq
 
 ### Installable APK file
-https://drive.google.com/file/d/1DsXJk9pY_oMusfGwdXPy1UR1ljMv2R8W/view?usp=drive_link
-
+https://drive.google.com/file/d/1JrcBOtla74pdRieDRArOD7mCR7vfXmxq/view?usp=sharing
 
 ### Prerequisites
 
