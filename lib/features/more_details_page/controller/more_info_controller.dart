@@ -14,7 +14,7 @@ class MoreInfoController extends StateNotifier<MoreInfoState> {
       if (crypto != null) {
         state = MoreInfoLoaded(crypto);
       } else {
-        state = const MoreInfoError('No data found');
+        state = const MoreInfoError('No data found (offline and no cache)');
       }
     } catch (e) {
       state = MoreInfoError(e.toString());

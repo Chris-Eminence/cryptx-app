@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptx/constants/colors.dart';
 import 'package:cryptx/features/favourites_page/ui/favourite_page.dart';
 import 'package:cryptx/features/homepage/controller/crypto_data_provider.dart';
@@ -41,10 +42,15 @@ class CryptoListItem extends ConsumerWidget {
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Image.network(
-                      crypto.image,
+                    child: SizedBox(
                       width: 32,
                       height: 32,
+                      child: CachedNetworkImage(
+                        imageUrl: crypto.image ?? '',
+                        placeholder: (context, url) =>
+                        const CircularProgressIndicator(strokeWidth: 2),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      )
                     ),
                   ),
                   const SizedBox(width: 8),

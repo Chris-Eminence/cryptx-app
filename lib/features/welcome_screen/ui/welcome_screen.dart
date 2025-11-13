@@ -78,9 +78,7 @@ class WelcomeScreen extends ConsumerWidget {
                     MaterialPageRoute(builder: (context) => const Homepage()),
                   );
                 },
-                child: isConnected.when(data: (connected){
-                  if(connected){
-                    return Container(
+                child: Container(
                       padding: EdgeInsets.symmetric(vertical: 16),
 
                       width: double.infinity,
@@ -98,16 +96,8 @@ class WelcomeScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    );
-                  }else{
-                    return Center(
-                      child: Text("Checking for Internet Connection", style: GoogleFonts.poppins(fontSize: 16, color: kPrimaryWhiteColor),),
-                    );
-                  }
-                }, loading: () => Center(child: CircularProgressIndicator(color: kPrimaryWhiteColor,)),
-                    error: (_, __) => const Text("Error Occurred"))
+                    ),),
 
-              ),
               SizedBox(height: 16),
             ],
           ),

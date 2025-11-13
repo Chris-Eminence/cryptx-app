@@ -28,8 +28,8 @@ class InternetNotifier extends Notifier<bool> {
 }
 
 final internetProvider = StreamProvider<bool>((ref) {
-  return InternetConnection().onStatusChange.map(
-        (event) => event == InternetStatus.connected,
-  );
+  return InternetConnection()
+      .onStatusChange
+      .map((event) => event == InternetStatus.connected);
 });
 

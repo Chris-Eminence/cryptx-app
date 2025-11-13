@@ -28,8 +28,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(cryptoProvider);
-    final isConnected = ref.watch(internetProvider);
-
+    final connection = ref.watch(internetProvider).value ?? false;
 
     // Filter crypto data based on search query
     final filteredData = state.data.where((crypto) {
@@ -45,239 +44,221 @@ class _HomepageState extends ConsumerState<Homepage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kPrimaryBlackColor,
-        body:
-        isConnected.when(data: (connected){
-          if(connected){
-            return Column(
-              children: [
-                // Search Bar
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: kHorizontalPadding,
-                    vertical: kVerticalPadding,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: kPrimaryWhiteColor),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _searchController,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _searchQuery = value;
-                                    });
-                                  },
-                                  style: TextStyle(color: kPrimaryWhiteColor),
-                                  decoration: InputDecoration(
-                                    hintText: 'Search',
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                    border: InputBorder.none,
-                                    hintStyle: TextStyle(
-                                      color: kPrimaryWhiteColor.withOpacity(0.6),
-                                    ),
-                                  ),
+        body: Column(
+          children: [
+            // Search Bar
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: kHorizontalPadding,
+                vertical: kVerticalPadding,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: kPrimaryWhiteColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchQuery = value;
+                                });
+                              },
+                              style: TextStyle(color: kPrimaryWhiteColor),
+                              decoration: InputDecoration(
+                                hintText: 'Search',
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                border: InputBorder.none,
+                                hintStyle: TextStyle(
+                                  color: kPrimaryWhiteColor.withOpacity(0.6),
                                 ),
                               ),
-                              if (_searchQuery.isNotEmpty)
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.clear,
-                                    color: kPrimaryWhiteColor,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _searchController.clear();
-                                      _searchQuery = '';
-                                    });
-                                  },
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FavouritePage(),
                             ),
-                          );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: kPrimaryWhiteColor),
                           ),
-                          child: Icon(
-                            Icons.favorite_rounded,
-                            color: Color(0xFFbd74a0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Banner
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/png/bg-line.png"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.all(16),
-
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding,
-                      vertical: kVerticalPadding,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: kGradientColor,
-                      ),
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Explore all crypto. Designed with flow",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          "—Focuses on the aesthetics and seamless navigation.",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // List
-                Expanded(
-                  child: Builder(
-                    builder: (_) {
-                      if (state.isLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      if (state.error != null) {
-                        return Center(
-                          child: Text(
-                            'Error: ${state.error}',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      }
-
-                      if (state.data.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            'No Data Found',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      }
-
-                      if (filteredData.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.search_off,
-                                size: 64,
-                                color: kPrimaryWhiteColor.withOpacity(0.5),
+                          if (_searchQuery.isNotEmpty)
+                            IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: kPrimaryWhiteColor,
                               ),
-                              SizedBox(height: 16),
-                              Text(
-                                'No results found for "$_searchQuery"',
-                                style: TextStyle(color: kPrimaryWhiteColor),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
-                      return ListView.builder(
-                        itemCount: filteredData.length,
-                        itemBuilder: (context, index) {
-                          final crypto = filteredData[index];
-                          return Container(
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            child: CryptoListItem(crypto: crypto),
-                          );
-                        },
+                              onPressed: () {
+                                setState(() {
+                                  _searchController.clear();
+                                  _searchQuery = '';
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FavouritePage(),
+                        ),
                       );
                     },
-                  ),
-                ),
-              ],
-            );
-          }else{
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.network_check_outlined,
-                    size: 100,
-                    color: kPrimaryWhiteColor.withOpacity(0.3),
-                  ),
-                  SizedBox(height: 24),
-                  Text(
-                    'No Internet Connection',
-                    style: TextStyle(
-                      color: kPrimaryWhiteColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 12),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      'Check your network connection and try again.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: kPrimaryWhiteColor.withOpacity(0.6),
-                        fontSize: 14,
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: kPrimaryWhiteColor),
+                      ),
+                      child: Icon(
+                        Icons.favorite_rounded,
+                        color: Color(0xFFbd74a0),
                       ),
                     ),
                   ),
                 ],
               ),
-            );
+            ),
 
-          }
-        }, loading: () => Center(child: CircularProgressIndicator(color: kPrimaryWhiteColor)),
-            error: (_, __) => const Text("Error Occurred"))
+            SizedBox(height: 16),
 
+            if (!connection)
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.yellow.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.wifi_off, color: Colors.redAccent),
+                    SizedBox(width: 8),
+                    Text(
+                      "You are currently browsing offline",
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                  ],
+                ),
+              ),
+
+            SizedBox(height: 16),
+            // Banner
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/png/bg-line.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(16),
+
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(
+                  horizontal: kHorizontalPadding,
+                  vertical: kVerticalPadding,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: kGradientColor,
+                  ),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "Explore all crypto. Designed with flow",
+                      style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "—Focuses on the aesthetics and seamless navigation.",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // List
+            Expanded(
+              child: Builder(
+                builder: (_) {
+                  if (state.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state.error != null) {
+                    return Center(
+                      child: Text(
+                        'Error: ${state.error}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }
+
+                  if (state.data.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'No Data Found',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }
+
+                  if (filteredData.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.search_off,
+                            size: 64,
+                            color: kPrimaryWhiteColor.withOpacity(0.5),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'No results found for "$_searchQuery"',
+                            style: TextStyle(color: kPrimaryWhiteColor),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: filteredData.length,
+                    itemBuilder: (context, index) {
+                      final crypto = filteredData[index];
+                      return Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        child: CryptoListItem(crypto: crypto),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

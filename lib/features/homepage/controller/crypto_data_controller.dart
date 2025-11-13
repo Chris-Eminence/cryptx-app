@@ -38,7 +38,9 @@ class CryptoDataController extends StateNotifier<CryptoDataState> {
         state = CryptoDataState.data(coins);
       }
     } catch (e) {
-      state = CryptoDataState.error(e.toString());
+      // If cached data exists, the repo will already return it.
+      // So this only triggers if both network and cache fail.
+      state = CryptoDataState.error('Unable to load data. Please connect to the internet.');
     }
   }
 }
